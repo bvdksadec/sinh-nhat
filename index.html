@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Đăng ký thông tin sinh nhật - Bệnh viện Đa khoa Sa Đéc</title>
+  
+  <!-- Open Graph / Zalo / Facebook Share Meta -->
+  <meta property="og:title" content="Đăng ký thông tin sinh nhật - Bệnh viện Đa khoa Sa Đéc">
+  <meta property="og:description" content="Hệ thống tự động chúc mừng sinh nhật qua Zalo Bot - Bệnh viện Đa khoa Sa Đéc.">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#2563eb">
+
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       HỆ THỐNG THIẾT KẾ: BỆNH VIỆN ĐA KHOA SA ĐÉC (TRANG CHUYỂN TIẾP GITHUB)
+       ========================================================================== */
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-active: #1e40af;
+      --primary-light: #eff6ff;
+      --primary-border: #bfdbfe;
+      --primary-shadow: rgba(37, 99, 235, 0.25);
+
+      --bg-page: #f8fafc;
+      --bg-card: #ffffff;
+      --text-main: #0f172a;
+      --text-sub: #334155;
+      --text-muted: #64748b;
+      --text-light: #94a3b8;
+
+      --border: #e2e8f0;
+      --radius-lg: 16px;
+      --radius: 12px;
+      --radius-sm: 8px;
+
+      --shadow-card: 0 12px 32px -4px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.03);
+      --shadow-btn: 0 4px 14px var(--primary-shadow);
+      --shadow-btn-hover: 0 6px 18px rgba(37, 99, 235, 0.35);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #f8fafc;
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ==========================================================================
+       1. MÀN HÌNH CHUYỂN TIẾP CHO ZALO (THEME TRẮNG SANG TRỌNG)
+       ========================================================================== */
+    #zaloGuideScreen {
+      display: none;
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: 24px 16px;
+      justify-content: center;
+      align-items: flex-start;
+      background: linear-gradient(180deg, #f0f6ff 0%, #f8fafc 260px, #f8fafc 100%);
+    }
+
+    .guide-container {
+      width: 100%;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+
+    /* Gợi ý góc 3 chấm ... của Zalo */
+    .zalo-hint-banner {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-bottom: 16px;
+      padding: 10px 14px;
+      background: #eff6ff;
+      border: 1.5px dashed #93c5fd;
+      border-radius: var(--radius-sm);
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 500;
+      text-align: right;
+      transition: all 0.3s ease;
+    }
+
+    .zalo-hint-text strong {
+      color: #1e40af;
+    }
+
+    .zalo-arrow-point {
+      font-size: 20px;
+      line-height: 1;
+      display: inline-block;
+      animation: pulsePoint 1.2s infinite ease-in-out;
+    }
+
+    @keyframes pulsePoint {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(3px, -3px); }
+    }
+
+    .guide-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-top: 3.5px solid var(--primary);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+      padding: 26px 20px 24px 20px;
+      text-align: center;
+    }
+
+    .hospital-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      margin-bottom: 20px;
+    }
+
+    .hospital-badge svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+
+    .browser-icon-wrap {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 16px auto;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      box-shadow: 0 8px 20px -4px rgba(37, 99, 235, 0.22);
+      border: 2px solid #bfdbfe;
+    }
+
+    .guide-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 10px;
+      line-height: 1.35;
+    }
+
+    .guide-desc {
+      font-size: 13.5px;
+      color: var(--text-sub);
+      line-height: 1.6;
+      margin-bottom: 22px;
+      padding: 0 4px;
+    }
+
+    .btn-launch {
+      width: 100%;
+      padding: 13px 20px;
+      font-size: 15.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-btn);
+      cursor: pointer;
+      margin-bottom: 18px;
+      transition: all 0.2s ease;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .btn-launch:hover {
+      background: var(--primary-hover);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-btn-hover);
+    }
+
+    .btn-launch:active {
+      transform: translateY(1px);
+    }
+
+    /* Các bước hướng dẫn */
+    .steps-card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      text-align: left;
+      margin-bottom: 18px;
+      transition: all 0.3s ease;
+    }
+
+    .steps-card.highlight {
+      border-color: var(--primary);
+      background: #eff6ff;
+      box-shadow: 0 0 0 3.5px rgba(37, 99, 235, 0.2);
+    }
+
+    .steps-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 12px;
+    }
+
+    .steps-title svg {
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .steps-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-sub);
+      line-height: 1.5;
+    }
+
+    .step-badge {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .btn-bypass {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 12.5px;
+      text-decoration: underline;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 4px;
+      transition: color 0.15s ease;
+    }
+
+    .btn-bypass:hover {
+      color: var(--text-main);
+    }
+
+    /* ==========================================================================
+       2. KHUNG IFRAME TOÀN MÀN HÌNH KHI Ở TRÌNH DUYỆT NGOÀI
+       ========================================================================== */
+    #iframeContainer {
+      display: none;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 10;
+      background: #f8fafc;
+    }
+
+    #appIframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    /* Loading Spinner khi tải Iframe */
+    #iframeLoading {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      transition: opacity 0.3s ease;
+    }
+
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3.5px solid #e2e8f0;
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 12px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* Toast thông báo */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #0f172a;
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 13px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      z-index: 999;
+      opacity: 0;
+      transition: all 0.3s ease;
+      pointer-events: none;
+      text-align: center;
+      max-width: 90%;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =======================================================
+       1. MÀN HÌNH HƯỚNG DẪN KHI ĐANG MỞ TRONG ZALO
+       ======================================================= -->
+  <div id="zaloGuideScreen">
+    <div class="guide-container">
+      <!-- Mũi tên chỉ lên góc trên bên phải của Zalo -->
+      <div class="zalo-hint-banner" id="zaloHintBanner">
+        <span class="zalo-hint-text">Chạm dấu <strong>(···)</strong> góc trên chọn <strong>"Mở bằng trình duyệt"</strong></span>
+        <span class="zalo-arrow-point">↗</span>
+      </div>
+
+      <div class="guide-card">
+        <!-- Huy hiệu bệnh viện -->
+        <div class="hospital-badge">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 10.5h-5.5V5c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v5.5H5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5h5.5V19c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-5.5H19c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5z"/>
+          </svg>
+          <span>BỆNH VIỆN ĐA KHOA SA ĐÉC</span>
+        </div>
+
+        <div class="browser-icon-wrap">
+          <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+          </svg>
+        </div>
+
+        <h1 class="guide-title">Mở bằng trình duyệt để tiếp tục</h1>
+        <p class="guide-desc">
+          Để hệ thống tự động kết nối vào khung chat Zalo Bot và lưu thông tin sau khi nhận mã, vui lòng mở trang này bằng trình duyệt web của điện thoại (Safari hoặc Chrome).
+        </p>
+
+        <!-- Nút mở bằng trình duyệt -->
+        <button type="button" id="btnOpenBrowser" class="btn-launch">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+          <span>Mở bằng trình duyệt</span>
+        </button>
+
+        <!-- Khung hướng dẫn 2 bước -->
+        <div id="stepsCard" class="steps-card">
+          <div class="steps-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            <span>Hướng dẫn mở nhanh trên Zalo:</span>
+          </div>
+          <div class="steps-list">
+            <div class="step-item">
+              <span class="step-badge">1</span>
+              <span>Nhìn lên góc trên bên phải màn hình Zalo, chạm vào dấu <strong>(···)</strong> (3 chấm).</span>
+            </div>
+            <div class="step-item">
+              <span class="step-badge">2</span>
+              <span>Chọn <strong>"Mở bằng trình duyệt"</strong> <em>(hoặc Mở bằng Safari / Chrome)</em>.</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <button type="button" id="btnBypass" class="btn-bypass">
+            Hoặc vẫn tiếp tục đăng ký tại đây
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================
+       2. KHUNG CHỨA TOÀN BỘ APP IFRAME KHI MỞ TRÌNH DUYỆT NGOÀI
+       ======================================================= -->
+  <div id="iframeContainer">
+    <div id="iframeLoading">
+      <div class="spinner"></div>
+      <div class="loading-text" id="loadingText">Đang tải biểu mẫu Bệnh viện...</div>
+      <a
+        id="btnDirectFallback"
+        href="https://script.google.com/macros/s/AKfycbyukMkevXX6eeZYD2DDyEKeZ_UVqi6-8IRYk-wlQqA-pip9RRF7312hkvPIp8Cv_kvb/exec"
+        target="_top"
+        style="display: none; margin-top: 14px; font-size: 13.5px; color: var(--primary); font-weight: 600; text-decoration: underline;"
+      >
+        👉 Bấm vào đây để mở trực tiếp biểu mẫu
+      </a>
+    </div>
+    <!-- Thẻ iframe gắn link Google Apps Script chính thức -->
+    <iframe
+      id="appIframe"
+      src=""
+      allow="clipboard-write; clipboard-read; web-share"
+      title="Đăng ký nhận lời chúc mừng sinh nhật - Bệnh viện Đa khoa Sa Đéc"
+    ></iframe>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    // URL ứng dụng Web App chính thức của Bệnh viện Đa khoa Sa Đéc
+    var APP_URL = 'https://script.google.com/macros/s/AKfycbyukMkevXX6eeZYD2DDyEKeZ_UVqi6-8IRYk-wlQqA-pip9RRF7312hkvPIp8Cv_kvb/exec';
+
+    // Nhận diện ứng dụng
+    var ua = navigator.userAgent || navigator.vendor || window.opera || '';
+    var isZalo = /zalo|zaloapp/i.test(ua);
+    var isAndroid = /android/i.test(ua);
+    var urlParams = new URLSearchParams(window.location.search);
+    var isBypass = urlParams.get('mode') === 'direct';
+
+    var zaloScreen = document.getElementById('zaloGuideScreen');
+    var iframeContainer = document.getElementById('iframeContainer');
+    var iframe = document.getElementById('appIframe');
+    var iframeLoading = document.getElementById('iframeLoading');
+
+    // Khởi tạo hiển thị
+    if (isZalo && !isBypass) {
+      // Đang trong Zalo: Hiện màn hình trắng hướng dẫn
+      zaloScreen.style.display = 'flex';
+      iframeContainer.style.display = 'none';
+    } else {
+      // Đã ở trình duyệt ngoài: Tải và hiển thị ngay Form Iframe
+      loadAppIframe();
+    }
+
+    // Tải Iframe Form có cơ chế chống kẹt xoay
+    function loadAppIframe() {
+      zaloScreen.style.display = 'none';
+      iframeContainer.style.display = 'block';
+
+      if (!iframe.src) {
+        var isLoaded = false;
+
+        function finishLoading() {
+          if (isLoaded) return;
+          isLoaded = true;
+          if (iframeLoading) {
+            iframeLoading.style.opacity = '0';
+            setTimeout(function () {
+              iframeLoading.style.display = 'none';
+            }, 300);
+          }
+        }
+
+        // Tự động tắt vòng xoay sau tối đa 2 giây (chống kẹt khi mở file cục bộ hoặc mạng chậm)
+        setTimeout(function () {
+          finishLoading();
+          // Nếu sau 2.5s vẫn chưa hiện form (do mở bằng file:// cục bộ bị Chrome chặn), hiện link mở trực tiếp
+          var fallbackBtn = document.getElementById('btnDirectFallback');
+          if (fallbackBtn) fallbackBtn.style.display = 'inline-block';
+        }, 2000);
+
+        // Đăng ký sự kiện onload TRƯỚC khi gán src
+        iframe.onload = finishLoading;
+        iframe.onerror = finishLoading;
+
+        // Bắt đầu nạp link
+        iframe.src = APP_URL;
+      }
+    }
+
+    // Bấm nút 'Mở bằng trình duyệt'
+    document.getElementById('btnOpenBrowser').addEventListener('click', function () {
+      var currentUrl = window.location.href;
+
+      // Hiệu ứng làm nổi bật khung hướng dẫn và mũi tên
+      var stepsCard = document.getElementById('stepsCard');
+      var banner = document.getElementById('zaloHintBanner');
+      if (stepsCard) {
+        stepsCard.classList.add('highlight');
+        setTimeout(function () { stepsCard.classList.remove('highlight'); }, 3000);
+      }
+      if (banner) {
+        banner.style.borderColor = '#2563eb';
+        banner.style.background = '#dbeafe';
+      }
+
+      if (isAndroid) {
+        // Trên Android: Thử kích hoạt Intent mở thẳng app Chrome
+        try {
+          var clean = currentUrl.replace(/^https?:\/\//i, '');
+          var intentUrl = 'intent://' + clean + '#Intent;scheme=https;package=com.android.chrome;end';
+          window.location.href = intentUrl;
+        } catch (e) {
+          window.open(currentUrl, '_system');
+        }
+      } else {
+        // Trên iPhone (iOS): Do bảo mật Apple, nhắc người dùng chạm vào dấu ...
+        showToast('Chạm vào dấu (···) ở góc trên bên phải → Chọn "Mở bằng trình duyệt"');
+      }
+    });
+
+    // Cho phép tiếp tục ngay tại chỗ nếu muốn
+    document.getElementById('btnBypass').addEventListener('click', function () {
+      loadAppIframe();
+    });
+
+    function showToast(msg) {
+      var toast = document.getElementById('toast');
+      if (!toast) return;
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(function () {
+        toast.classList.remove('show');
+      }, 3500);
+    }
+  </script>
+</body>
+</html>
