@@ -449,34 +449,20 @@
   </div>
 
   <!-- =======================================================
-       2. KHUNG CHỨA TOÀN BỘ APP IFRAME KHI MỞ TRÌNH DUYỆT NGOÀI
+       2. KHUNG CHỨA BIỂU MẪU IFRAME TOÀN MÀN HÌNH
        ======================================================= -->
-  <div id="iframeContainer">
-    <div id="iframeLoading">
-      <div class="spinner"></div>
-      <div class="loading-text" id="loadingText">Đang tải biểu mẫu Bệnh viện...</div>
-      <a
-        id="btnDirectFallback"
-        href="https://script.google.com/macros/s/AKfycbyukMkevXX6eeZYD2DDyEKeZ_UVqi6-8IRYk-wlQqA-pip9RRF7312hkvPIp8Cv_kvb/exec"
-        target="_top"
-        style="display: none; margin-top: 14px; font-size: 13.5px; color: var(--primary); font-weight: 600; text-decoration: underline;"
-      >
-        👉 Bấm vào đây để mở trực tiếp biểu mẫu
-      </a>
-    </div>
-    <!-- Thẻ iframe gắn link Google Apps Script chính thức -->
-    <iframe
-      id="appIframe"
-      src=""
-      allow="clipboard-write; clipboard-read; web-share"
-      title="Đăng ký nhận lời chúc mừng sinh nhật - Bệnh viện Đa khoa Sa Đéc"
-    ></iframe>
-  </div>
+  <iframe
+    id="appIframe"
+    src="https://script.google.com/macros/s/AKfycbyukMkevXX6eeZYD2DDyEKeZ_UVqi6-8IRYk-wlQqA-pip9RRF7312hkvPIp8Cv_kvb/exec"
+    style="display: none; width: 100vw; height: 100vh; height: 100dvh; border: none; margin: 0; padding: 0; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 10;"
+    allow="clipboard-write; clipboard-read; web-share"
+    title="Đăng ký nhận lời chúc mừng sinh nhật - Bệnh viện Đa khoa Sa Đéc"
+  ></iframe>
 
   <div id="toast" class="toast"></div>
 
   <script>
-    // URL ứng dụng Web App chính thức của Bệnh viện Đa khoa Sa Đéc
+    // URL Web App chính thức của Bệnh viện Đa khoa Sa Đéc
     var APP_URL = 'https://script.google.com/macros/s/AKfycbyukMkevXX6eeZYD2DDyEKeZ_UVqi6-8IRYk-wlQqA-pip9RRF7312hkvPIp8Cv_kvb/exec';
 
     // Nhận diện ứng dụng
@@ -487,60 +473,20 @@
     var isBypass = urlParams.get('mode') === 'direct';
 
     var zaloScreen = document.getElementById('zaloGuideScreen');
-    var iframeContainer = document.getElementById('iframeContainer');
     var iframe = document.getElementById('appIframe');
-    var iframeLoading = document.getElementById('iframeLoading');
 
-    // Khởi tạo hiển thị
     if (isZalo && !isBypass) {
-      // Đang trong Zalo: Hiện màn hình trắng hướng dẫn
+      // 1. Mở trong Zalo: Hiện màn hình trắng trang nhã có nút bấm và hướng dẫn
       zaloScreen.style.display = 'flex';
-      iframeContainer.style.display = 'none';
+      iframe.style.display = 'none';
     } else {
-      // Đã ở trình duyệt ngoài: Tải và hiển thị ngay Form Iframe
-      loadAppIframe();
-    }
-
-    // Tải Iframe Form có cơ chế chống kẹt xoay
-    function loadAppIframe() {
+      // 2. Mở ở Safari / Chrome ngoài: Hiện thẳng biểu mẫu iframe toàn màn hình
       zaloScreen.style.display = 'none';
-      iframeContainer.style.display = 'block';
-
-      if (!iframe.src) {
-        var isLoaded = false;
-
-        function finishLoading() {
-          if (isLoaded) return;
-          isLoaded = true;
-          if (iframeLoading) {
-            iframeLoading.style.opacity = '0';
-            setTimeout(function () {
-              iframeLoading.style.display = 'none';
-            }, 300);
-          }
-        }
-
-        // Tự động tắt vòng xoay sau tối đa 2 giây (chống kẹt khi mở file cục bộ hoặc mạng chậm)
-        setTimeout(function () {
-          finishLoading();
-          // Nếu sau 2.5s vẫn chưa hiện form (do mở bằng file:// cục bộ bị Chrome chặn), hiện link mở trực tiếp
-          var fallbackBtn = document.getElementById('btnDirectFallback');
-          if (fallbackBtn) fallbackBtn.style.display = 'inline-block';
-        }, 2000);
-
-        // Đăng ký sự kiện onload TRƯỚC khi gán src
-        iframe.onload = finishLoading;
-        iframe.onerror = finishLoading;
-
-        // Bắt đầu nạp link
-        iframe.src = APP_URL;
-      }
+      iframe.style.display = 'block';
     }
 
-    // Bấm nút 'Mở bằng trình duyệt'
+    // Xử lý nút 'Mở bằng trình duyệt' khi đang ở trong Zalo
     document.getElementById('btnOpenBrowser').addEventListener('click', function () {
-      var currentUrl = window.location.href;
-
       // Hiệu ứng làm nổi bật khung hướng dẫn và mũi tên
       var stepsCard = document.getElementById('stepsCard');
       var banner = document.getElementById('zaloHintBanner');
@@ -554,23 +500,24 @@
       }
 
       if (isAndroid) {
-        // Trên Android: Thử kích hoạt Intent mở thẳng app Chrome
+        // Trên Android: Mở thẳng Chrome
         try {
-          var clean = currentUrl.replace(/^https?:\/\//i, '');
-          var intentUrl = 'intent://' + clean + '#Intent;scheme=https;package=com.android.chrome;end';
+          var cleanUrl = window.location.href.replace(/^https?:\/\//i, '');
+          var intentUrl = 'intent://' + cleanUrl + '#Intent;scheme=https;package=com.android.chrome;end';
           window.location.href = intentUrl;
         } catch (e) {
-          window.open(currentUrl, '_system');
+          window.open(window.location.href, '_system');
         }
       } else {
-        // Trên iPhone (iOS): Do bảo mật Apple, nhắc người dùng chạm vào dấu ...
+        // Trên iPhone (iOS): Do Apple bảo mật, nhắc người dùng chạm vào dấu ...
         showToast('Chạm vào dấu (···) ở góc trên bên phải → Chọn "Mở bằng trình duyệt"');
       }
     });
 
     // Cho phép tiếp tục ngay tại chỗ nếu muốn
     document.getElementById('btnBypass').addEventListener('click', function () {
-      loadAppIframe();
+      zaloScreen.style.display = 'none';
+      iframe.style.display = 'block';
     });
 
     function showToast(msg) {
